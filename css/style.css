@@ -2,18 +2,20 @@ html {
     box-sizing: border-box;
 }
 
-*,
-*::before,
-*::after {
-    box-sizing: inherit;
+body,
+html {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
 }
 
-html,
-body {
-    width: 100%;
-    height: 100%;
-    margin: 0;
-    padding: 0;
+header,
+main,
+footer,
+section,
+div {
+  box-sizing: border-box;
 }
 
 body {
@@ -22,9 +24,16 @@ body {
 }
 
 .container {
+    width: 100%;
+    padding: 0;
+    margin: 0;
+    display: -webkit-box;
+    display: -moz-box;
+    display: -ms-flexbox;
+    display: -webkit-flex;
     display: flex;
-    justify-content: center;
     align-items: center;
+    justify-content: center;
     flex-direction: column;
 }
 
@@ -33,17 +42,13 @@ h1 {
     font-weight: 300;
 }
 
-.cats {
-    cursor: pointer;
-}
-
 /*
  * Styles for the Score Panel
  */
 
 .score-panel {
     text-align: center;
-    width: 345px;
+    width: auto;
     margin-bottom: 10px;
 }
 
@@ -53,31 +58,73 @@ h1 {
     cursor: pointer;
 }
 
-.score-panel .points {
-    padding-left: 30px;
-}
-
 .score-panel .runner {
     padding-left: 30px;
 }
 
-.button {
-    padding: 5px 15px;
-    text-align: center;
-    cursor: pointer;
-    outline: none;
-    color: #2e3d49;
-    background-color: #fff;
-    border: none;
-    border-radius: 12px;
-    box-shadow: 1px 1px 6px 0px #2e3d49;
-    font-size: 75%;
-    margin-top: 5px;
+/*
+ * Cats list
+ */
+
+.cats {
+    width: 100%;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    flex-flow: row;
+    flex-wrap: wrap;
 }
 
-.button:hover {
-    background-color: #02ccba;
-    color: #fff;
+.catsList {
+    display: flex;
+    list-style-type: none;
+    align-items: center;
+    justify-content: center;
+    flex-flow: row;
+    flex-wrap: wrap;
 }
+
+.cat {
+    display: flex;
+    width: 25%;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    margin: 2rem;
+}
+
+.image {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-flow: row;
+}
+
+.catInfo {
+    text-align: center;
+}
+
+img {
+    cursor: pointer;
+    height: 70%;
+    width: 70%;
+    align-items: center;
+}
+
+p {
+    margin: 0;
+}
+
+.name .clicks {
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    flex-flow: row;
+    margin: 1rem;
+}
+
+
+
 
 
