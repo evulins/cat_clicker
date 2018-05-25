@@ -27,94 +27,100 @@ let cats = {
 function catSelector(catsList) {
     for (let i = 0; i < catsList.length; i++) {
         const current = catsList[i];
-        const cat = $(`
+        const catName = $(`
             <li class="selectCat">
                     <p class="nameSelector"><span>${current.name}</span></p>
             </li>
         `);
 
-        cat.find('.nameSelector').on('click', function(event) {
+        catName.find('.nameSelector').on('click', function(event) {
             event.preventDefault();
             $(".catsSelection").hide();
             $(".cats").show();
         });
         // Adds all cats to list .catsList
-        $('.catsMenu').append(cat);
+        $('.catsMenu').append(catName);
     };
 }
 
-// function registerClickCat() {
-//   $('.selectCat').click(function(event) {
-//     event.preventDefault();
-//     $(".catsSelection").hide();
-//     $(".cats").show()
-//     const cat = $(this).find('.name span').text();
-//     var selectedCat = cats.getCat(cat);
-//     showCat(selectedCat);
-// });
+//Shows selected cat from the cat list
+function registerClickCat() {
+    $('.selectCat').click(function(event) {
+        event.preventDefault();
+        $(".catsSelection").hide();
+        $(".cats").show();
+        $(".score-panel").show();
+        clearCatWindow();
+        clearCatsList();
+        const kitty = $(this).find('.nameSelector').text();
+        const selectedCat = cats.getSelectedCat(kitty);
+        showCat(selectedCat);
+    });
+}
 
 //Shows selected cat
-function showCat(catsList) {
+function showCat(selectedCat) {
+    const current = selectedCat;
+    const cat = $(`
+        <li class='cat'>
+            <div class="catInfo">
+                <p class='name'><span>${current.name}</span></p>
+                <span class="clicks">0</span> clicks
+            </div>
+            <div class='image'>
+                <img src="images/${current.image}">
+            </div>
+        </li>
+    `);
+    const counter = cat.find('span.clicks');
 
-    for (let i = 0; i < catsList.length; i++) {
-        const current = catsList[i];
-        const cat = $(`
-            <li class='cat'>
-                <div class="catInfo">
-                    <p class='name'><span>${current.name}</span></p>
-                    <span class="clicks">0</span> clicks
-                </div>
-                <div class='image'>
-                    <img src="images/${current.image}">
-                </div>
-            </li>
-        `);
-        const counter = cat.find('span.clicks');
+    cat.find('.image').on('click', (function(counter) {
+        return function() {
+            const clicks = counter.text();
+            counter.text(parseInt(clicks) + 1);
+            if (gameStarted === false) {
+                gameStarted = true;
+                $('.runner').runner('start');
+            }
+        };
+    })(counter));
 
-        cat.find('.image').on('click', (function(counter) {
-            return function() {
-                const clicks = counter.text();
-                counter.text(parseInt(clicks) + 1);
-                if (gameStarted === false) {
-                    gameStarted = true;
-                    $('.runner').runner('start');
-                }
-            };
-        })(counter));
+    // Adds all cats to list .catsList
+    $('.catsList').append(cat);
+}  
 
-        // Adds all cats to list .catsList
-        $('.catsList').append(cat);
-    }  
+function clearCatWindow() {
+  $(".cat").empty();
+}
+
+function clearCatsList() {
+  $(".catsList").empty();
 }
 
 // Resets the game and the score
 $('.restart, .button').on('click', function() {
     event.preventDefault();
-    gameOver = false;
     $('span.clicks').text('0');
     $('.runner').runner('reset', true);
     clickCounter = 0;
+});
+
+$('.return, .button').on('click', function() {
+    event.preventDefault();
+    $(".catsSelection").show();
+    $(".cats").hide();
+    $(".score-panel").hide();
 });
 
 function startGame() {
     //Runs the stopwatch
     $('.runner').runner();
 
-//Adds the event listener for a clicked cat
-    // $('img').on('click', function(event) {
-    //     event.preventDefault();
-    //     updateClickCounter();
-
-    //     if (gameStarted === false) {
-    //         gameStarted = true;
-    //         $('.runner').runner('start');
-    //     }
-    // });
 }
 
 (function() {
     startGame();
-    showCat(cats.getAll());
     catSelector(cats.getAll());
+    registerClickCat();
 })();
 

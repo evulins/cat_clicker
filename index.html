@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <title>Cat Clicker</title>
     <meta name="description" content="">
-    <link rel="stylesheet prefetch" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.1/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp" crossorigin="anonymous">
     <link rel="stylesheet prefetch" href="https://fonts.googleapis.com/css?family=Coda">
     <link rel="stylesheet" href="css/style.css">
 </head>
@@ -15,12 +15,16 @@
             <h1>Cat Clicker</h1>
         </header>
 
-        <section class="score-panel">
+        <section class="score-panel" style="display: none;">
+            <!-- Buttun which returns to the main list -->
+            <span class="return">
+                <i class="far fa-arrow-alt-circle-left left"></i>
+            </span>
             <!-- Stopwatch -->
             <span class="runner"></span>
             <!-- Button which restarts the game -->
             <div class="restart">
-        		<i class="fa fa-repeat"></i>
+        		<i class="fas fa-redo-alt"></i>
         	</div>
         </section>
         <!-- Selection of cats -->
