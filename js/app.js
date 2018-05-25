@@ -10,23 +10,61 @@ let cats = {
         {name: 'Mokra Lola', image: 'mokraLola.jpg'},
         {name: 'Dziewczyny', image: 'cats.jpg'}
     ],
-
+    // Gets all cats from the list
     getAll: function() {
             return cats.list;
+    },
+    // Gets selected cat based on her name
+    getSelectedCat: function(name) {
+        var result = cats.list.filter(function(element) {
+            return element.name === name;
+        });
+        return result[0];
     }
 };
 
-function showCats(catsList) {
+//Creates list of cats
+function catSelector(catsList) {
+    for (let i = 0; i < catsList.length; i++) {
+        const current = catsList[i];
+        const cat = $(`
+            <li class="selectCat">
+                    <p class="nameSelector"><span>${current.name}</span></p>
+            </li>
+        `);
+
+        cat.find('.nameSelector').on('click', function(event) {
+            event.preventDefault();
+            $(".catsSelection").hide();
+            $(".cats").show();
+        });
+        // Adds all cats to list .catsList
+        $('.catsMenu').append(cat);
+    };
+}
+
+// function registerClickCat() {
+//   $('.selectCat').click(function(event) {
+//     event.preventDefault();
+//     $(".catsSelection").hide();
+//     $(".cats").show()
+//     const cat = $(this).find('.name span').text();
+//     var selectedCat = cats.getCat(cat);
+//     showCat(selectedCat);
+// });
+
+//Shows selected cat
+function showCat(catsList) {
 
     for (let i = 0; i < catsList.length; i++) {
         const current = catsList[i];
         const cat = $(`
-            <li class="cat">
+            <li class='cat'>
                 <div class="catInfo">
-                    <p class="name"><span>${current.name}</span></p>
+                    <p class='name'><span>${current.name}</span></p>
                     <span class="clicks">0</span> clicks
                 </div>
-                <div class="image">
+                <div class='image'>
                     <img src="images/${current.image}">
                 </div>
             </li>
@@ -75,7 +113,8 @@ function startGame() {
 }
 
 (function() {
-    showCats(cats.getAll());
     startGame();
+    showCat(cats.getAll());
+    catSelector(cats.getAll());
 })();
 

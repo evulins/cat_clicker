@@ -62,6 +62,37 @@ h1 {
     padding-left: 30px;
 }
 
+
+/*
+ * Styles for the Cats Selection
+ */
+
+.catsSelection {
+    width: 100%;
+    align-items: center;
+    justify-content: center;
+    flex-flow: row;
+    flex-wrap: wrap;
+}
+
+.catsMenu {
+    list-style-type: circle;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.nameSelector {
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    flex-flow: row;
+    margin: 1rem;
+    cursor: pointer;
+}
+
+
 /*
  * Cats list
  */
