@@ -40,6 +40,10 @@ body {
 h1 {
     font-family: 'Open Sans', sans-serif;
     font-weight: 300;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
 }
 
 /*
@@ -127,7 +131,7 @@ h1 {
 
 .cat {
     display: flex;
-    width: 60%;
+    width: 100%;
     flex-direction: column;
     align-items: center;
     justify-content: center;
@@ -148,8 +152,7 @@ h1 {
 
 img {
     cursor: pointer;
-    height: 70%;
-    width: 70%;
+    width: 60%;
     align-items: center;
 }
 

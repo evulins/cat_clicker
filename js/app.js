@@ -98,14 +98,14 @@ function clearCatsList() {
 }
 
 // Resets the game and the score
-$('.restart, .button').on('click', function() {
+$('.redo, .button').on('click', function(event) {
     event.preventDefault();
     $('span.clicks').text('0');
     $('.runner').runner('reset', true);
     clickCounter = 0;
 });
 
-$('.return, .button').on('click', function() {
+$('.left, .button').on('click', function(event) {
     event.preventDefault();
     $(".catsSelection").show();
     $(".cats").hide();
