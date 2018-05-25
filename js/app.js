@@ -65,7 +65,7 @@ function showCat(selectedCat) {
         <li class='cat'>
             <div class="catInfo">
                 <p class='name'><span>${current.name}</span></p>
-                <span class="clicks">0</span> clicks
+                <p><span class="clicks">0</span> clicks</p>
             </div>
             <div class='image'>
                 <img src="images/${current.image}">
@@ -110,6 +110,10 @@ $('.left, .button').on('click', function(event) {
     $(".catsSelection").show();
     $(".cats").hide();
     $(".score-panel").hide();
+    $('span.clicks').text('0');
+    $('.runner').runner('reset', true);
+    clickCounter = 0;
+    gameStarted = false;
 });
 
 function startGame() {
