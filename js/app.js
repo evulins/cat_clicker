@@ -4,11 +4,11 @@ let gameStarted = false;
 
 let cats = {
     list: [ 
-        {name: 'Stefka', image: 'stefka.jpg', clickCounter: 0},
-        {name: 'Lola', image: 'lola.jpg', clickCounter: 0},
-        {name: 'Mokra Stefka', image: 'mokraStefka.jpg', clickCounter: 0},
-        {name: 'Mokra Lola', image: 'mokraLola.jpg', clickCounter: 0},
-        {name: 'Dziewczyny', image: 'cats.jpg', clickCounter: 0}
+        {name: 'Stefka', image: 'images/stefka.jpg', clickCounter: 0},
+        {name: 'Lola', image: 'images/lola.jpg', clickCounter: 0},
+        {name: 'Mokra Stefka', image: 'images/mokraStefka.jpg', clickCounter: 0},
+        {name: 'Mokra Lola', image: 'images/mokraLola.jpg', clickCounter: 0},
+        {name: 'Dziewczyny', image: 'images/cats.jpg', clickCounter: 0}
     ],
     // Gets all cats from the list
     getAll: function() {
@@ -20,11 +20,19 @@ let cats = {
             return element.name === name;
         });
         return result[0];
+    },
+    updateCat: function(oldName, newName, newUrl, newClickNumber) {
+        var cat = cats.getSelectedCat(oldName);
+        
+        cat.name = newName;
+        cat.image = newUrl;
+        cat.clickCounter = newClickNumber;
     }
 };
 
 //Creates list of cats
 function catSelector(catsList) {
+    $('.catsMenu').empty();
     for (let i = 0; i < catsList.length; i++) {
         const current = catsList[i];
         const catName = $(`
@@ -57,16 +65,18 @@ function registerClickCat() {
         const selectedCat = cats.getSelectedCat(kitty);
         catView.showCat(selectedCat);
         adminForm(selectedCat);
-
+        //Button save
         $('.save').on('click', function(event) {
             event.preventDefault();
             var newName = $('#name').val();
             var newUrl = $('#url').val();
             var newClickNumber = $('#clicks').val();
-            $('.name').replaceWith(newName);
-            $('.image img').replaceWith(newUrl);
-            $('.clicks').replaceWith(newClickNumber);
-            $('.adminForm').hide();
+            cats.updateCat(kitty, newName, newUrl, newClickNumber);
+            $('.name span').text(newName);
+            $('.image img').attr( "src", newUrl);
+            $('.clicks').text(newClickNumber);
+            $('.admin-form').hide();
+
         });
 
         $('.cancel').on('click', function(event) {
@@ -87,7 +97,7 @@ var catView = {
                     <p><span class="clicks">${current.clickCounter}</span> clicks</p>
                 </div>
                 <div class='image'>
-                    <img src="images/${current.image}">
+                    <img src="${current.image}">
                 </div>
             </li>
         `);
@@ -146,7 +156,9 @@ $('.redo, .button').on('click', function(event) {
 
 $('.left, .button').on('click', function(event) {
     event.preventDefault();
+    catSelector(cats.getAll());
     $(".catsSelection").show();
+    registerClickCat();
     $(".cats").hide();
     $(".score-panel").hide();
     $(".admin-form").hide();
