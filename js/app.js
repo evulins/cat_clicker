@@ -1,7 +1,9 @@
+
+const model = {
+    gameStarted: false
+};
+
 // Global variables
-
-let gameStarted = false;
-
 let cats = {
     list: [ 
         {name: 'Stefka', image: 'images/stefka.jpg', clickCounter: 0},
@@ -107,8 +109,8 @@ var catView = {
                 return function() {
                     const clicks = counter.text();
                     counter.text(parseInt(clicks) + 1);
-                    if (gameStarted === false) {
-                        gameStarted = true;
+                    if (model.gameStarted === false) {
+                        model.gameStarted = true;
                         $('.runner').runner('start');
                     }
                     $('#clicks').val(counter.text());
@@ -166,7 +168,7 @@ $('.left, .button').on('click', function(event) {
     $('span.clicks').text('0');
     $('.runner').runner('reset', true);
     clickCounter = 0;
-    gameStarted = false;
+    model.gameStarted = false;
     clearAdminForm();
 });
 
