@@ -1,30 +1,31 @@
 
 const model = {
-    gameStarted: false
-};
-
-// Global variables
-let cats = {
-    list: [ 
+    gameStarted: false,
+    cats: [ 
         {name: 'Stefka', image: 'images/stefka.jpg', clickCounter: 0},
         {name: 'Lola', image: 'images/lola.jpg', clickCounter: 0},
         {name: 'Mokra Stefka', image: 'images/mokraStefka.jpg', clickCounter: 0},
         {name: 'Mokra Lola', image: 'images/mokraLola.jpg', clickCounter: 0},
         {name: 'Dziewczyny', image: 'images/cats.jpg', clickCounter: 0}
-    ],
+    ]
+};
+
+// Global variables
+const octopus = {
+
     // Gets all cats from the list
     getAll: function() {
-            return cats.list;
+            return model.cats;
     },
     // Gets selected cat based on her name
     getSelectedCat: function(name) {
-        var result = cats.list.filter(function(element) {
+        var result = model.cats.filter(function(element) {
             return element.name === name;
         });
         return result[0];
     },
     updateCat: function(oldName, newName, newUrl, newClickNumber) {
-        var cat = cats.getSelectedCat(oldName);
+        var cat = this.getSelectedCat(oldName);
         
         cat.name = newName;
         cat.image = newUrl;
@@ -33,24 +34,26 @@ let cats = {
 };
 
 //Creates list of cats
-function catSelector(catsList) {
-    $('.catsMenu').empty();
-    for (let i = 0; i < catsList.length; i++) {
-        const current = catsList[i];
-        const catName = $(`
-            <li class="selectCat">
-                    <p class="nameSelector"><span>${current.name}</span></p>
-            </li>
-        `);
+const catList = {
+    catSelector: function(catsList) {
+        $('.catsMenu').empty();
+        for (let i = 0; i < catsList.length; i++) {
+            const current = catsList[i];
+            const catName = $(`
+                <li class="selectCat">
+                        <p class="nameSelector"><span>${current.name}</span></p>
+                </li>
+            `);
 
-        catName.find('.nameSelector').on('click', function(event) {
-            event.preventDefault();
-            $(".catsSelection").hide();
-            $(".cats").show();
-        });
-        // Adds all cats to list .catsList
-        $('.catsMenu').append(catName);
-    };
+            catName.find('.nameSelector').on('click', function(event) {
+                event.preventDefault();
+                $(".catsSelection").hide();
+                catView.show();
+            });
+            // Adds all cats to list .catsList
+            $('.catsMenu').append(catName);
+        };
+    }
 }
 
 //Shows selected cat from the cat list
@@ -58,14 +61,14 @@ function registerClickCat() {
     $('.selectCat').click(function(event) {
         event.preventDefault();
         $(".catsSelection").hide();
-        $(".cats").show();
+        catView.show();
         $(".score-panel").show();
         $(".admin-button").show();
         clearCatWindow();
         clearCatsList();
         const kitty = $(this).find('.nameSelector').text();
-        const selectedCat = cats.getSelectedCat(kitty);
-        catView.showCat(selectedCat);
+        const selectedCat = octopus.getSelectedCat(kitty);
+        catView.render(selectedCat);
         adminForm(selectedCat);
         //Button save
         $('.save').on('click', function(event) {
@@ -73,7 +76,7 @@ function registerClickCat() {
             var newName = $('#name').val();
             var newUrl = $('#url').val();
             var newClickNumber = $('#clicks').val();
-            cats.updateCat(kitty, newName, newUrl, newClickNumber);
+            octopus.updateCat(kitty, newName, newUrl, newClickNumber);
             $('.name span').text(newName);
             $('.image img').attr( "src", newUrl);
             $('.clicks').text(newClickNumber);
@@ -89,19 +92,22 @@ function registerClickCat() {
 }
 
 //Shows selected cat
-var catView = {
-    showCat: function(selectedCat) {
-        const current = selectedCat;
+const catView = {
+    init: function() {
+        this.catList = $('.cat-container');
+    },
+
+    render: function(selectedCat) {
         const cat = $(`
-            <li class='cat'>
+            <div class='cat'>
                 <div class="catInfo">
-                    <p class='name'><span>${current.name}</span></p>
-                    <p><span class="clicks">${current.clickCounter}</span> clicks</p>
+                    <p class='name'><span>${selectedCat.name}</span></p>
+                    <p><span class="clicks">${selectedCat.clickCounter}</span> clicks</p>
                 </div>
                 <div class='image'>
-                    <img src="${current.image}">
+                    <img src="${selectedCat.image}">
                 </div>
-            </li>
+            </div>
         `);
         const counter = cat.find('span.clicks');
 
@@ -118,8 +124,17 @@ var catView = {
         })(counter));
 
         // Adds all cats to list .catsList
-        $('.catsList').append(cat);
+        this.catList.append(cat);
+    },
+
+    show: function() {
+        this.catList.show();
+    },
+
+    hide: function() {
+        this.catList.hide();
     }
+
 };
 
 function adminForm(catData) {
@@ -158,10 +173,10 @@ $('.redo, .button').on('click', function(event) {
 
 $('.left, .button').on('click', function(event) {
     event.preventDefault();
-    catSelector(cats.getAll());
+    catSelector(octopus.getAll());
     $(".catsSelection").show();
     registerClickCat();
-    $(".cats").hide();
+    catView.hide();
     $(".score-panel").hide();
     $(".admin-form").hide();
     $('.admin-button').hide();
@@ -179,8 +194,9 @@ function startGame() {
 }
 
 (function() {
+    catView.init();
     startGame();
-    catSelector(cats.getAll());
+    catSelector(octopus.getAll());
     registerClickCat();
 })();
 

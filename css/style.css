@@ -114,23 +114,13 @@ h1 {
  * Cats list
  */
 
-.cats {
+.cat-container {
     width: 100%;
     align-items: center;
     justify-content: center;
     flex-direction: column;
     flex-flow: row;
     flex-wrap: wrap;
-}
-
-.catsList {
-    display: flex;
-    list-style-type: none;
-    align-items: center;
-    justify-content: center;
-    flex-flow: row;
-    flex-wrap: wrap;
-    padding: 0;
 }
 
 .cat {
