@@ -30,13 +30,56 @@ const octopus = {
         cat.name = newName;
         cat.image = newUrl;
         cat.clickCounter = newClickNumber;
+    },
+    //Shows selected cat from the cat list
+    registerClickCat: function() {
+        $('.selectCat').click(function(event) {
+            event.preventDefault();
+            catsListView.hide();
+            catView.show();
+            $(".score-panel").show();
+            $(".admin-button").show();
+            catView.clearCatWindow();
+            catsListView.clear();
+            const kitty = $(this).find('.nameSelector').text();
+            const selectedCat = octopus.getSelectedCat(kitty);
+            catView.render(selectedCat);
+            catView.adminForm(selectedCat);
+            //Button save
+            $('.save').on('click', function(event) {
+                event.preventDefault();
+                var newName = $('#name').val();
+                var newUrl = $('#url').val();
+                var newClickNumber = $('#clicks').val();
+                octopus.updateCat(kitty, newName, newUrl, newClickNumber);
+                $('.name span').text(newName);
+                $('.image img').attr( "src", newUrl);
+                $('.clicks').text(newClickNumber);
+                $('.admin-form').hide();
+
+            });
+
+            $('.cancel').on('click', function(event) {
+                event.preventDefault();
+                $('.admin-form').hide();
+            });
+        });
+    },
+    
+    startGame: function() {
+    //Runs the stopwatch
+    $('.runner').runner();
     }
 };
 
 //Creates list of cats
-const catList = {
-    catSelector: function(catsList) {
-        $('.catsMenu').empty();
+const catsListView = {
+    init: function() {
+        this.catsMenu = $('.catsMenu');
+        this.catsListContainer = $('.cats-list-container');
+    },
+    render: function(catsList) {
+        this.catsMenu.empty();
         for (let i = 0; i < catsList.length; i++) {
             const current = catsList[i];
             const catName = $(`
@@ -47,54 +90,30 @@ const catList = {
 
             catName.find('.nameSelector').on('click', function(event) {
                 event.preventDefault();
-                $(".catsSelection").hide();
+                catsListView.hide();
                 catView.show();
             });
             // Adds all cats to list .catsList
-            $('.catsMenu').append(catName);
+            this.catsMenu.append(catName);
         };
+    },
+    show: function() {
+        this.catsListContainer.show();
+    },
+
+    hide: function() {
+        this.catsListContainer.hide();
+    },
+
+    clear: function() {
+        $(".catsList").empty();
     }
-}
-
-//Shows selected cat from the cat list
-function registerClickCat() {
-    $('.selectCat').click(function(event) {
-        event.preventDefault();
-        $(".catsSelection").hide();
-        catView.show();
-        $(".score-panel").show();
-        $(".admin-button").show();
-        clearCatWindow();
-        clearCatsList();
-        const kitty = $(this).find('.nameSelector').text();
-        const selectedCat = octopus.getSelectedCat(kitty);
-        catView.render(selectedCat);
-        adminForm(selectedCat);
-        //Button save
-        $('.save').on('click', function(event) {
-            event.preventDefault();
-            var newName = $('#name').val();
-            var newUrl = $('#url').val();
-            var newClickNumber = $('#clicks').val();
-            octopus.updateCat(kitty, newName, newUrl, newClickNumber);
-            $('.name span').text(newName);
-            $('.image img').attr( "src", newUrl);
-            $('.clicks').text(newClickNumber);
-            $('.admin-form').hide();
-
-        });
-
-        $('.cancel').on('click', function(event) {
-            event.preventDefault();
-            $('.admin-form').hide();
-        });
-    });
 }
 
 //Shows selected cat
 const catView = {
     init: function() {
-        this.catList = $('.cat-container');
+        this.catContainer = $('.cat-container');
     },
 
     render: function(selectedCat) {
@@ -124,43 +143,39 @@ const catView = {
         })(counter));
 
         // Adds all cats to list .catsList
-        this.catList.append(cat);
+        this.catContainer.append(cat);
     },
 
     show: function() {
-        this.catList.show();
+        this.catContainer.show();
     },
 
     hide: function() {
-        this.catList.hide();
-    }
+        this.catContainer.hide();
+    },
 
+    adminForm: function(catData) {
+        const currentCat = catData;
+        $('.admin-button').on('click', function(event) {
+            event.preventDefault();
+            $(".admin-form").show();
+            $('#name').val(currentCat.name);
+            $('#url').val(currentCat.image);
+            $('#clicks').val(currentCat.clickCounter);
+        });
+    },
+
+    clearCatWindow: function() {
+        $(".cat").empty();
+    },
+
+    clearAdminForm: function() {
+        $("#name").empty();
+        $("#url").empty();
+        $("#clicks").empty();
+    }
 };
 
-function adminForm(catData) {
-    const currentCat = catData;
-    $('.admin-button').on('click', function(event) {
-        event.preventDefault();
-        $(".admin-form").show();
-        $('#name').val(currentCat.name);
-        $('#url').val(currentCat.image);
-        $('#clicks').val(currentCat.clickCounter);
-    });
-}
-
-function clearCatWindow() {
-  $(".cat").empty();
-}
-
-function clearCatsList() {
-  $(".catsList").empty();
-}
-
-function clearAdminForm() {
-    $("#name").empty();
-    $("#url").empty();
-    $("#clicks").empty();
-}
 
 // Resets the game and the score
 $('.redo, .button').on('click', function(event) {
@@ -168,14 +183,14 @@ $('.redo, .button').on('click', function(event) {
     $('span.clicks').text('0');
     $('.runner').runner('reset', true);
     clickCounter = 0;
-    clearAdminForm();
+    catView.clearAdminForm();
 });
 
 $('.left, .button').on('click', function(event) {
     event.preventDefault();
-    catSelector(octopus.getAll());
-    $(".catsSelection").show();
-    registerClickCat();
+    catsListView.render(octopus.getAll());
+    catsListView.show();
+    octopus.registerClickCat();
     catView.hide();
     $(".score-panel").hide();
     $(".admin-form").hide();
@@ -184,19 +199,15 @@ $('.left, .button').on('click', function(event) {
     $('.runner').runner('reset', true);
     clickCounter = 0;
     model.gameStarted = false;
-    clearAdminForm();
+    catView.clearAdminForm();
 });
 
-function startGame() {
-    //Runs the stopwatch
-    $('.runner').runner();
-
-}
 
 (function() {
+    catsListView.init();
     catView.init();
-    startGame();
-    catSelector(octopus.getAll());
-    registerClickCat();
+    octopus.startGame();
+    catsListView.render(octopus.getAll());
+    octopus.registerClickCat();
 })();
 
